@@ -3,7 +3,8 @@
 const httpStatusCodes = require('http-status-codes');
 const { httpErrorHandler } = require('../../common/handlers');
 const { 
-    getPostByUserIdService 
+    getPostByUserIdService,
+    getAllPostsService 
 } = require('../../services');
 
 const listPostHandler = async (req, res, next) => {
@@ -12,11 +13,16 @@ const listPostHandler = async (req, res, next) => {
             user_id
         } = req.query;
         
-        const {
-            posts
-        } = await getPostByUserIdService({
-            user_id
-        })
+        const has_user_id = !!user_id && Number.isFinite(+user_id);
+        
+        const user_posts = has_user_id && await getPostByUserIdService({user_id});
+
+        const all_posts = !has_user_id && await getAllPostsService();
+
+        const posts = [
+            ...user_posts ? user_posts.posts : [],
+            ...all_posts ? all_posts.posts : [],
+        ];
 
         return res.status(httpStatusCodes.OK).send({posts});
     }catch(error){
