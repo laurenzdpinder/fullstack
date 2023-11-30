@@ -1,12 +1,10 @@
-const { 
+const {
     client
 } = require('../../../common/handlers')
 
-const getPostByUserIdRepositories = async ({
-    user_id
-} = {}) => {
+const getAllPostsRepositories = async () => {
 
-    const response = await client('posts').where({author_id: user_id})
+    const response = await client('posts')
 
     const has_response = Array.isArray(response) && response.length > 0;
 
@@ -22,5 +20,5 @@ const getPostByUserIdRepositories = async ({
 }
 
 module.exports = {
-    getPostByUserIdRepositories
+    getAllPostsRepositories
 }
