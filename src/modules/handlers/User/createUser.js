@@ -11,11 +11,14 @@ const createUserHandler = async (req, res, next) => {
             full_name
         } = req.body
 
-        const created_user = await createUserService({
-            user_email,
-            user_password,
-            full_name
-        })
+        const userCredentials = { user_email, user_password, full_name };
+
+        const { user_created_id } = await createUserService(userCredentials);
+
+        const created_user = {
+            id: user_created_id[0],
+            ...userCredentials
+        }
 
         return res.status(httpStatusCodes.OK).send(created_user);
     }catch(error){
